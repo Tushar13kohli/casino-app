@@ -132,6 +132,12 @@ body {
     left: 0;
     z-index: 9999999;
 }
+.text-preloader{
+    opacity: 0.6;
+    text-align: center;
+    margin-top: 120px;
+    margin-left: -25px;
+}
 .loader {
     position: absolute;
     top: 0px;
@@ -139,7 +145,7 @@ body {
     left: 0px;
     right: 0px;
     margin: auto;
-    width: 175px;
+    width: 185px;
     height: 100px;
 }
 
@@ -350,6 +356,44 @@ p {
     filter: none;
 }
 
+.casino-btn button {
+    width: 15%;
+    position: relative;
+    display: inline-block;
+    font-size: 24px;
+    vertical-align: top;
+    text-align: center;
+    letter-spacing: 1px;
+    line-height: 24px;
+    color: #fefefe;
+    font-weight: 400;
+    font-family: "Anton";
+    padding: 13px 30px;
+    border-radius: 35px;
+    text-transform: capitalize;
+    -webkit-transition: all ease 0.9s;
+    -moz-transition: all ease 0.9s;
+    -ms-transition: all ease 0.9s;
+    -o-transition: all ease 0.9s;
+    transition: all ease 0.9s;
+    text-shadow: 5px 4px 0px rgba(0, 0, 0, .1);
+    background: linear-gradient(to bottom, #ffd679 30%, #f7ac03 70%);
+    filter: drop-shadow(0 0px 20px rgba(101, 40, 193, 0.5));
+    box-shadow: 0px 0px 2px 1px rgba(247, 172, 4, 0.8);
+
+}
+.casino-btn button:hover {
+    background: linear-gradient(to bottom, #e673cf 10%, #9a368a 90%);
+    box-shadow: 0px 0px 3px 1px rgba(152, 51, 134, 0.4);
+    text-shadow: 5px 3px 0px #943184;
+    filter: drop-shadow(0 0px 20px rgba(152, 51, 134, 0.6));
+}
+
+.run-txt .casino-btn button:hover,
+.run-txt .casino-btn button {
+    filter: none;
+}
+
 .heading h2 {
     font-size: 36px;
     position: relative;
@@ -446,6 +490,7 @@ p {
 }
 
 .header-nav .navbar-brand {
+    top: -28px;
     color: #fff;
     font-weight: 800;
     position: relative;
@@ -487,6 +532,7 @@ p {
 }
 
 .header-nav .nav-sign {
+    top: 12px;
     vertical-align: top;
     position: absolute;
     right: 0;
@@ -520,6 +566,13 @@ p {
     text-shadow: 5px 4px 0px #efa500;
     background: linear-gradient(to bottom, #ffd679 30%, #f7ac03 70%);
     filter: drop-shadow(0 0px 20px rgba(101, 40, 193, 0.5));
+}
+.nav-sign li a#connectWallet{
+    font-size: 18px !important;
+    letter-spacing: 1px;
+    line-height: 24px;
+    width: 200px;
+    color: white;
 }
 
 .nav-sign li a:hover {
@@ -810,21 +863,35 @@ nav.navbar .container {
     height: 100vh;
     position: relative;
 }
+.main_page_lottery {
+
+    background-size: cover;
+    height: 100vh;
+    position: relative;
+}
 
 .banner-center {
     position: absolute;
     top: 55%;
     left: 0%;
-    width: 600px;
+    width: 700px;
     text-align: center;
     transform: translateY(-50%);
+}
+.banner-center-lottery{
+    position: absolute;
+    top: 45%;
+    left: 0%;
+    width: 100%;
+    text-align: center;
+    transform: translateY(-50%)
 }
 
 .title {
     font-size: 106px;
     letter-spacing: -1px;
     line-height: 110px;
-    width: 570px;
+    width: 700px;
     font-weight: 400;
     font-family: "Anton";
     background: -webkit-linear-gradient(#fcb503 46%, #e5881b 54%, #fcb11a);
@@ -840,6 +907,19 @@ nav.navbar .container {
     filter: drop-shadow(0 0 40px #68248c);
     left: 0;
     z-index: -99;
+}
+
+.title-lottery {
+    font-size: 106px;
+    letter-spacing: -1px;
+    line-height: 110px;
+    width: 100%;
+    font-weight: 400;
+    font-family: "Anton";
+    background: -webkit-linear-gradient(#fcb503 46%, #e5881b 54%, #fcb11a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    z-index: 99;
 }
 
 .banner_text h2 {
@@ -1323,7 +1403,7 @@ nav.navbar .container {
 =======================================*/
 
 /*=====================================
-    Start of Unlock Free spin part css
+    Start of Unlock spin part css
 =======================================*/
 .free-spin {
     padding-bottom: 40px;
@@ -1346,7 +1426,7 @@ nav.navbar .container {
 }
 
 /*=====================================
-    End of Unlock Free spin  part css
+    End of Unlock spin  part css
 =======================================*/
 /*========================================
             Casino Jackpots Start 
@@ -1834,7 +1914,6 @@ nav.navbar .container {
 }
 
 .contact-app {
-    text-align: center;
 }
 
 .contact-app ul {
@@ -2212,7 +2291,7 @@ nav.navbar .container {
     top: 0;
     height: 100%;
     width: 100%;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.8);
     z-index: 0;
 }
 
