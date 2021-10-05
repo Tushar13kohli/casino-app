@@ -542,6 +542,19 @@ p {
     margin-right: 10px;
 }
 
+.whale:hover {
+    color: #f7ab00;
+    transition: all ease 0.5s;
+    -webkit-transition: all ease 0.5s;
+    }
+    
+.whale {
+    color: white;
+    cursor: pointer;
+    }
+
+
+
 .nav-sign li a {
     position: relative;
     display: inline-block;
@@ -568,6 +581,7 @@ p {
     filter: drop-shadow(0 0px 20px rgba(101, 40, 193, 0.5));
 }
 .nav-sign li a#connectWallet{
+    cursor: pointer;
     font-size: 18px !important;
     letter-spacing: 1px;
     line-height: 24px;
