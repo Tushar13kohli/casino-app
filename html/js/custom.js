@@ -227,6 +227,9 @@ $ (function () {
   $ ('.preloader').delay (2500).fadeOut (1000);
 });
 
+const getTicketPrice = async () => {
+  await mainnetAbi.buyLottery
+}
 const onClickLogin = () => {
   alert (
     "Our Team is working on getting user based authentication setup so users dont have to work with wallets and platform itself will handle individual user's portfolio."
@@ -262,7 +265,6 @@ async function getAccounts () {
   }
 }
 async function connectMetamask () {
-  debugger;
   if (window.ethereum) {
     try {
       const result = await this.getAccounts ();
@@ -286,26 +288,25 @@ async function connectMetamask () {
     return false;
   }
 }
-async function buyLottery () {
-  debugger;
-  let ticketsToBuy = document.getElementById ('input-lottery').value;
-  let amountToBuy =
-    parseInt (ticketsToBuy, 10) * ticketPrice * 1000000000000000000;
-  bigInt (amountToBuy).toString (16);
-  var web3 = new Web3 (Web3.givenProvider);
-  window.contract = await new web3.eth.Contract (mainnetAbi, mainnetContract);
-  const transactionParameters = {
-    to: mainnetContract,
-    from: (await this.getAccounts ())[0],
-    value: bigInt (amountToBuy).toString (16),
-    data: '0xc53c9d72',
-  };
-  try {
-    await window.ethereum.request ({
-      method: 'eth_sendTransaction',
-      params: [transactionParameters],
-    });
-  } catch (error) {
-    console.log (error);
+async function buyLottery() {
+  let ticketsToBuy = document.getElementById('input-lottery').value;
+  var web3 = new Web3(Web3.givenProvider);
+  window.contract = await new web3.eth.Contract(mainnetAbi, mainnetContract);
+  const amountToBuy = await window.contract.methods.lotteryTicketPrice().call() * parseInt(ticketsToBuy, 10)
+  if (amountToBuy) {
+    const transactionParameters = {
+      to: mainnetContract,
+      from: (await this.getAccounts())[0],
+      value: bigInt(amountToBuy).toString(16),
+      data: '0xc53c9d72',
+    };
+    try {
+      await window.ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [transactionParameters],
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
