@@ -1,4 +1,4 @@
-const mainnetContract = '0xcb66B1Da0fAAA53FfAD1792638E19083f83417BC';
+const mainnetContract = '0x9bcEB89487789FFA0e4974291066366CDF4411eA';
 const ticketPrice = 0.1;
 var Web3;
 let isConnected;
