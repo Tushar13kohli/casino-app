@@ -297,7 +297,7 @@ async function buyLottery() {
     const transactionParameters = {
       to: mainnetContract,
       from: (await this.getAccounts())[0],
-      value: bigInt(amountToBuy).toString(16),
+      value: amountToBuy,
       data: '0xc53c9d72',
     };
     try {
