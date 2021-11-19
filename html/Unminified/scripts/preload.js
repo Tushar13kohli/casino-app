@@ -38,7 +38,7 @@ class Load extends Phaser.Scene {
 		this.input.on('gameobjectdown', ()=>{
 			this.scene.start('menu');
 		}, this);
-		//
+		
 		this.load.image('symbols','img/symbols.png');
 		this.load.image('symbols_blur','img/symbols_blur.png');
 		this.load.image('machine','img/machine.png');
