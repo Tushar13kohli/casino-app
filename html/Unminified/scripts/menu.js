@@ -3,7 +3,7 @@ class Menu extends Phaser.Scene {
 		super('menu');
 	}
 	create(){
-		play_music('music', this);
+		// play_music('music', this);
 		let state = 'menu';
 		let popup;
 		let self = this;
@@ -27,9 +27,9 @@ class Menu extends Phaser.Scene {
 			ease: 'Sine.easeInOut',
 		});
 		draw_button(800, 476, 'play', this);
-		draw_button(685, 585, 'about', this);
-		let b_music = draw_button(889, 585, 'menu_music', this);
-		let b_sound = draw_button(1019, 585, 'menu_sound', this);
+		// draw_button(685, 585, 'about', this);
+		// let b_music = draw_button(889, 585, 'menu_music', this);
+		// let b_sound = draw_button(1019, 585, 'menu_sound', this);
 		if(!game_config.music){
 			b_music.setTexture('btn_menu_music_off');
 		}

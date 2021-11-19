@@ -47,8 +47,8 @@ class Game extends Phaser.Scene {
 		this.add.sprite(config.width/2,config.height/2,'bg');
 		let m = this.add.sprite(640+fix.x,330,'machine');
 		let lever = this.add.sprite(1155+fix.x, 319, 'lever');
-		this.add.tileSprite(1200,0,180,67,'header').setOrigin(0,0);
-		this.add.sprite(config.width-400,0,'separate').setOrigin(0);
+		// this.add.tileSprite(1200,0,180,67,'header').setOrigin(0,0);
+		// this.add.sprite(config.width-400,0,'separate').setOrigin(0);
 		// this.add.sprite(400,0,'separate').setOrigin(0);
 		// this.add.sprite(config.width-220,0,'separate').setOrigin(0);
 		// this.add.sprite(220,0,'separate').setOrigin(0);
@@ -72,8 +72,8 @@ class Game extends Phaser.Scene {
 		// let b_plusl = draw_button(302+fix.x, 668,'plus_lines',this);
 		// let b_minusl = draw_button(140+fix.x, 669,'minus_lines',this);
 		//
-		let b_sound = draw_button(1100+fix.x, 35,'sound',this);
-		let b_music = draw_button(1170+fix.x, 35,'music',this);
+		// let b_sound = draw_button(1100+fix.x, 35,'sound',this);
+		// let b_music = draw_button(1170+fix.x, 35,'music',this);
 		// draw_button(120+fix.x, 35,'back',this);
 		// draw_button(200+fix.x, 35,'full',this);
 		//End button
@@ -905,7 +905,7 @@ function switch_audio(e,obj,scope){
 		} else {
 			game_config.music = true;
 			obj.setTexture('btn_'+e);
-			play_music('music', scope);
+			// play_music('music', scope);
 		}
 	} else {
 		if(game_config.sound){

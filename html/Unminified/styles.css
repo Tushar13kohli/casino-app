@@ -20,6 +20,9 @@ h4 {
   margin-bottom: 20px;
   font-size: 20px;
 }
+.align-super{
+  vertical-align: super;
+}
 .switch {
   background: linear-gradient(100deg, #6de324, #e8c9a5, #eb5959);
   width: 100%;

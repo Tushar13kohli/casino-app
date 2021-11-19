@@ -13,10 +13,12 @@
         <link rel="shortcut icon" sizes="256x256" href="img/icon.png"/>
         <script type="text/javascript" src="scripts/phaser.min.js"></script>
         <script type="text/javascript" src="scripts/utils.js"></script>
-
+        <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
         <script>
             let maxBet = 2000000000;
             let minBet = 10;
+            var audio = new Audio("./audio/music.mp3");
+            audio.loop = true;
             $(document).ready(function () {
                 let spanButton = getElement("right-button");
                 let criteria = isBetCriteriaHigh();
@@ -37,7 +39,7 @@
 
             let betCriteria;
             let betAmount;
-
+            let musicPlay = true;
             window.onload = () => {
                 betCriteria = getValueFromLocalStorage("betCriteria") || "high";
                 betAmount = getValueFromLocalStorage("betAmount");
@@ -46,11 +48,12 @@
                 const headerAmount = getElement("amount");
                 const headerCriteria = getElement("criteria");
                 headerAmount.innerHTML = betAmount.toUpperCase()
-                headerCriteria.innerHTML = betCriteria === "high" ? "Higher than 49,999": "Lower than 49,999";;
+                headerCriteria.innerHTML = betCriteria === "high" ? "Higher than 49,999" : "Lower than 49,999";;
                 betCriteriaElem.value = betCriteria;
                 betAmountElem.value = betAmount;
                 writeToLocalStorage("betCriteria", betCriteria);
                 writeToLocalStorage("betAmount", betAmount);
+                audio.play();
             }
             function isBetCriteriaHigh() {
                 return getValueFromLocalStorage("betCriteria") === "high";
@@ -59,7 +62,7 @@
                 debugger;
                 writeToLocalStorage("betCriteria", event.target.value);
                 const headerCriteria = getElement("criteria");
-                headerCriteria.innerHTML = event.target.value === "high" ? "Higher than 49,999": "Lower than 49,999";
+                headerCriteria.innerHTML = event.target.value === "high" ? "Higher than 49,999" : "Lower than 49,999";
             }
             function onChangeBet(event) {
                 const inputElem = getElement("bet-amount")
@@ -75,20 +78,56 @@
                 inputElem.value = number
                 writeToLocalStorage("betAmount", inputElem.value);
             }
-        </script>
+            function onClickPlay() {
+                const musicElem = getElement("play-music")
+                if (musicElem.classList.contains("fa-volume-up")) {
+                    audio.pause();
+                    musicElem.classList.remove("fa-volume-up")
+                    musicElem.classList.add("fa-volume-off")
+                } else {
+                    audio.play();
+                    musicElem.classList.add("fa-volume-up")
+                    musicElem.classList.remove("fa-volume-off")
+                } 
+                
+                // audio.oncanplaythrough = function () {
+                //     audio.play();
+                // }
+
+                // audio.loop = true;
+
+                // audio.onended = function () {
+                //     audio.play();
+                //     console.log("Play the music")
+                // }
+            }
+                </script>
+            </head>
+        </head>
     </head>
     <body>
         <div>
             <nav class="navbar navbar-dark bg-dark header-styles justify-content-around">
                 <div class="text-white w-70">
-                    <p class="mb-0">Bet Criteria: <span id="criteria"class="choice-criteria"></span></p>
-                    <p class="mb-0">Bet Amount: <span id="amount" class="choice-amount">10000</span></p>
+                    <p class="mb-0">Bet Criteria:
+                        <span id="criteria" class="choice-criteria"></span>
+                    </p>
+                    <p class="mb-0">Bet Amount:
+                        <span id="amount" class="choice-amount">10000</span>
+                    </p>
                 </div>
-                <button class="setting-button navbar-toggler text-white font-weight-bold" type="button" data-toggle="modal" data-target="#myModal2" data-toggle="collapse" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <div>
+
+               
+                <button class="setting-button navbar-toggler text-white font-weight-bold" onclick="onClickPlay()">
+                    <i id="play-music" class='text-white fa fa-volume-up' style='font-size:36px'></i>
+                </button>
+                <button class="align-super setting-button navbar-toggler text-white font-weight-bold" type="button" data-toggle="modal" data-target="#myModal2" data-toggle="collapse" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                     <span>Bet Settings
                         <i class="fa fa-gear fa-spin" style="font-size:24px"></i>
                     </span>
                 </button>
+            </div>
                 <div class="modal right fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -131,4 +170,4 @@
             </div>
         </div>
     </body>
-</html></nav></div><div><iframe class="main-wrapper" src="./test.html"></iframe></div></body></html>
+</html></head></html></nav></div><div><iframe class="main-wrapper" src="./test.html"></iframe></div></body></html>

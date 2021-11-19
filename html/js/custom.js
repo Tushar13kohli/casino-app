@@ -1,9 +1,9 @@
-const mainnetContract = '0x9bcEB89487789FFA0e4974291066366CDF4411eA';
-const ticketPrice = 0.1;
-var Web3;
-let isConnected;
+const mainnetContract = '0x9bcEB89487789FFA0e4974291066366CDF4411eA'
+const ticketPrice = 0.1
+var Web3
+let isConnected
 const mainnetAbi = [
-  {inputs: [], stateMutability: 'nonpayable', type: 'constructor'},
+  { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },
   {
     anonymous: false,
     inputs: [
@@ -57,7 +57,11 @@ const mainnetAbi = [
   },
   {
     inputs: [
-      {internalType: 'uint256', name: 'newLotteryTicketPrice', type: 'uint256'},
+      {
+        internalType: 'uint256',
+        name: 'newLotteryTicketPrice',
+        type: 'uint256',
+      },
     ],
     name: 'DrawLotteryWinner',
     outputs: [],
@@ -67,113 +71,136 @@ const mainnetAbi = [
   {
     inputs: [],
     name: 'LotteryParticipants',
-    outputs: [{internalType: 'uint256', name: '', type: 'uint256'}],
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [{internalType: 'uint256', name: 'TicketID', type: 'uint256'}],
+    inputs: [{ internalType: 'uint256', name: 'TicketID', type: 'uint256' }],
     name: 'getLotteryTicketHolder',
-    outputs: [{internalType: 'address', name: '', type: 'address'}],
+    outputs: [{ internalType: 'address', name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [{internalType: 'address', name: 'account', type: 'address'}],
+    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
     name: 'getTicketCount',
-    outputs: [{internalType: 'uint256', name: '', type: 'uint256'}],
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'lotteryTicketPrice',
-    outputs: [{internalType: 'uint256', name: '', type: 'uint256'}],
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'owner',
-    outputs: [{internalType: 'address', name: '', type: 'address'}],
+    outputs: [{ internalType: 'address', name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function',
   },
-];
+]
+const baseUrl = "http://example.com"
+const urls = {
+  profile: `${baseUrl}/me`,
+  login: `${baseUrl}/login`,
+  signup: `${baseUrl}/signup`,
 
-$ (function () {
-  'use strict';
+}
+
+// Utils
+const getElement = (id) => {
+  return document.getElementById(id)
+}
+const getAuthToken = () => {
+  return localStorage.getItem('auth_token')
+}
+
+const writeToLocalStorage = (key, value) => {
+  localStorage.setItem(key, value)
+}
+
+const readFromLocalStorage = (key) => {
+  return localStorage.getItem(key)
+}
+
+$(function () {
+  'use strict'
   // for navbar background color when scrolling
-  $ (window).scroll (function () {
-    var $scrolling = $ (this).scrollTop ();
-    var bc2top = $ ('#back-top-btn');
-    var stickytop = $ ('.sticky-top');
+  $(window).scroll(function () {
+    var $scrolling = $(this).scrollTop()
+    var bc2top = $('#back-top-btn')
+    var stickytop = $('.sticky-top')
     if ($scrolling >= 10) {
-      stickytop.addClass ('navcss');
+      stickytop.addClass('navcss')
     } else {
-      stickytop.removeClass ('navcss');
+      stickytop.removeClass('navcss')
     }
     if ($scrolling > 150) {
-      bc2top.fadeIn (1000);
+      bc2top.fadeIn(1000)
     } else {
-      bc2top.fadeOut (1000);
+      bc2top.fadeOut(1000)
     }
-  });
+  })
 
-  $ ('.full_nav .nav > li > .more-less').on ('click', function () {
-    $ ('.full_nav .nav').toggleClass ('tog-nav');
-    $ ('.full_nav .nav').toggleClass ('fa-time');
-  });
+  $('.full_nav .nav > li > .more-less').on('click', function () {
+    $('.full_nav .nav').toggleClass('tog-nav')
+    $('.full_nav .nav').toggleClass('fa-time')
+  })
 
   //animation scroll js
-  var nav = $ ('nav'), navOffset = nav.offset ().top, $window = $ (window);
+  var nav = $('nav'),
+    navOffset = nav.offset().top,
+    $window = $(window)
   /* navOffset ends */
 
-  var html_body = $ ('html, body');
-  $ ('nav a').on ('click', function () {
+  var html_body = $('html, body')
+  $('nav a').on('click', function () {
     if (
-      location.pathname.replace (/^\//, '') ===
-        this.pathname.replace (/^\//, '') &&
+      location.pathname.replace(/^\//, '') ===
+        this.pathname.replace(/^\//, '') &&
       location.hostname === this.hostname
     ) {
-      var target = $ (this.hash);
-      target = target.length
-        ? target
-        : $ ('[name=' + this.hash.slice (1) + ']');
+      var target = $(this.hash)
+      target = target.length ? target : $('[name=' + this.hash.slice(1) + ']')
       if (target.length) {
-        html_body.animate (
+        html_body.animate(
           {
-            scrollTop: target.offset ().top - 80,
+            scrollTop: target.offset().top - 80,
           },
-          1000
-        );
-        return false;
+          1000,
+        )
+        return false
       }
     }
-  });
+  })
 
   // navbar js ends here
 
   // this is for back to top js
-  var bc2top = $ ('#back-top-btn');
-  bc2top.on ('click', function () {
-    html_body.animate (
+  var bc2top = $('#back-top-btn')
+  bc2top.on('click', function () {
+    html_body.animate(
       {
         scrollTop: 0,
       },
-      1300
-    );
-  });
+      1300,
+    )
+  })
 
   // Closes responsive menu when a scroll link is clicked
-  $ ('.nav-link').on ('click', function () {
-    $ ('.navbar-collapse').collapse ('hide');
-  });
+  $('.nav-link').on('click', function () {
+    $('.navbar-collapse').collapse('hide')
+  })
 
   /* -------------------------------------
 	          Running slick js				
 	 	-------------------------------------- */
-  $ ('.score-slick').slick ({
+  $('.score-slick').slick({
     infinite: true,
     slidesToShow: 7,
     slidesToScroll: 1,
@@ -197,116 +224,186 @@ $ (function () {
         },
       },
     ],
-  });
+  })
 
   /* -------------------------------------
              Count-down js			
     	-------------------------------------- */
 
-  $ ('.count-down').countdown ('2030/08/11', function (event) {
-    $ (this).html (event.strftime ('%H'));
-  });
-  $ ('.count-down2').countdown ('2030/08/01', function (event) {
-    $ (this).html (event.strftime ('%M'));
-  });
+  $('.count-down').countdown('2030/08/11', function (event) {
+    $(this).html(event.strftime('%H'))
+  })
+  $('.count-down2').countdown('2030/08/01', function (event) {
+    $(this).html(event.strftime('%M'))
+  })
 
-  $ ('.count-down3').countdown ('2030/11/22', function (event) {
-    $ (this).html (event.strftime ('%S'));
-  });
+  $('.count-down3').countdown('2030/11/22', function (event) {
+    $(this).html(event.strftime('%S'))
+  })
 
   /* -------------------------------------
 	          youtube video js start here			
 	 	-------------------------------------- */
-  jQuery ('a.bla-1').YouTubePopUp ({
+  jQuery('a.bla-1').YouTubePopUp({
     autoplay: 0,
-  }); // Disable autoplay
+  }) // Disable autoplay
 
   /* -------------------------------------
 	          Preloader				
 	 	-------------------------------------- */
-  $ ('.preloader').delay (2500).fadeOut (1000);
-});
+  $('.preloader').delay(2500).fadeOut(1000)
+})
 
 const getTicketPrice = async () => {
   await mainnetAbi.buyLottery
 }
 const onClickLogin = () => {
-  alert (
-    "Our Team is working on getting user based authentication setup so users dont have to work with wallets and platform itself will handle individual user's portfolio."
-  );
-};
+  alert(
+    "Our Team is working on getting user based authentication setup so users dont have to work with wallets and platform itself will handle individual user's portfolio.",
+  )
+}
 
 const onClickApp = () => {
-  alert (
-    'We have kickstarted the App development for Lucky Pig Casino. Timelines for completion will be shared soon.'
-  );
-};
-window.onload = async () => {
-  let element = document.getElementById ('connectWallet');
-  const result = await this.getAccounts ();
-  if (Array.isArray (result) && result.length > 0) {
-    element.innerHTML = `Wallet - ...${result[0].substring (result[0].length - 7)}`;
-    document.getElementById (
-      'connectWallet-mobile'
-    ).innerHTML = `Wallet - ...${result[0].substring (result[0].length - 7)}`;
+  alert(
+    'We have kickstarted the App development for Lucky Pig Casino. Timelines for completion will be shared soon.',
+  )
+}
 
-    isConnected = true;
+const fetchUserInfo = () => {
+  let connectedWallet = readFromLocalStorage('connectedWallet')
+  fetch(`${urls.profile}?walletAddress=${connectedWallet}`)
+    .then((response) => {
+      writeToLocalStorage("doesUserExist", true)
+    })
+    .then((response) => {
+      // Do something with response.
+    })
+    .catch((err) => console.log(err))
+}
+
+const onClickSubmitForm = () => {
+  let doesUserExist = readFromLocalStorage('doesUserExist')
+  let callingUrl = doesUserExist ? urls.login : urls.signup;
+  const wallet = readFromLocalStorage('connectedWallet')
+  const password = getElement('passwordField')
+
+  const payload = {
+    walletAddress: wallet,
+    password
   }
-};
-async function getAccounts () {
-  try {
-    let acc = await window.ethereum.request ({
-      method: 'eth_requestAccounts',
-    });
+  fetch(`${callingUrl}`, payload)
+    .then((response) => {
+      writeToLocalStorage("auth_token", response.token)
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+}
 
-    return acc;
-  } catch (e) {
-    return [];
+const getLabel = () => {
+  const labelElement = getElement('label-banner')
+  const submitButton = getElement('submit-button-form')
+  const modalHeader = getElement('modal-label')
+  const confirmElement = getElement('confirmPassword')
+  if (getAuthToken()) {
+    labelElement.innerHTML = 'Sign In'
+    submitButton.innerHTML = 'Sign In'
+    modalHeader.innerHTML = 'Sign In'
+    confirmElement.style.display = 'none'
+  } else {
+    labelElement.innerHTML = 'Register'
+    submitButton.innerHTML = 'Register'
+    modalHeader.innerHTML = 'Register'
   }
 }
-async function connectMetamask () {
+
+const validatePassword = (event) => {
+  const passwordValue = getElement('passwordField')
+  const errorMessage = getElement('password-error')
+  if (!event) {
+    errorMessage.style.display = 'none'
+    return true
+  }
+  if (passwordValue.value !== event.target.value) {
+    errorMessage.style.display = 'block'
+    return false
+  }
+  errorMessage.style.display = 'none'
+  return true
+}
+
+window.onload = async () => {
+  let element = document.getElementById('connectWallet')
+  const result = await this.getAccounts()
+  if (Array.isArray(result) && result.length > 0) {
+    element.innerHTML = `Wallet - ...${result[0].substring(
+      result[0].length - 7,
+    )}`
+    document.getElementById(
+      'connectWallet-mobile',
+    ).innerHTML = `Wallet - ...${result[0].substring(result[0].length - 7)}`
+
+    isConnected = true
+  }
+  getLabel()
+  validatePassword()
+}
+async function getAccounts() {
+  try {
+    let acc = await window.ethereum.request({
+      method: 'eth_requestAccounts',
+    })
+
+    return acc
+  } catch (e) {
+    return []
+  }
+}
+async function connectMetamask() {
   if (window.ethereum) {
     try {
-      const result = await this.getAccounts ();
-      if (Array.isArray (result) && result.length > 0) {
-        isConnected = true;
-        let acc = result[0];
-        document.getElementById (
-          'connectWallet'
-        ).innerHTML = `Wallet - ...${result[0].substring (result[0].length - 7)}`;
-        document.getElementById (
-          'connectWallet-mobile'
-        ).innerHTML = `Wallet - ...${result[0].substring (result[0].length - 7)}`;
-        return acc;
+      const result = await this.getAccounts()
+      if (Array.isArray(result) && result.length > 0) {
+        isConnected = true
+        let acc = result[0]
+        document.getElementById(
+          'connectWallet',
+        ).innerHTML = `Wallet - ...${result[0].substring(result[0].length - 7)}`
+        document.getElementById(
+          'connectWallet-mobile',
+        ).innerHTML = `Wallet - ...${result[0].substring(result[0].length - 7)}`
+        return acc
       } else {
-        return false;
+        return false
       }
     } catch (err) {
-      return false;
+      return false
     }
   } else {
-    return false;
+    return false
   }
 }
 async function buyLottery() {
-  let ticketsToBuy = document.getElementById('input-lottery').value;
-  var web3 = new Web3(Web3.givenProvider);
-  window.contract = await new web3.eth.Contract(mainnetAbi, mainnetContract);
-  const amountToBuy = await window.contract.methods.lotteryTicketPrice().call() * parseInt(ticketsToBuy, 10)
+  let ticketsToBuy = document.getElementById('input-lottery').value
+  var web3 = new Web3(Web3.givenProvider)
+  window.contract = await new web3.eth.Contract(mainnetAbi, mainnetContract)
+  const amountToBuy =
+    (await window.contract.methods.lotteryTicketPrice().call()) *
+    parseInt(ticketsToBuy, 10)
   if (amountToBuy) {
     const transactionParameters = {
       to: mainnetContract,
       from: (await this.getAccounts())[0],
       value: amountToBuy,
       data: '0xc53c9d72',
-    };
+    }
     try {
       await window.ethereum.request({
         method: 'eth_sendTransaction',
         params: [transactionParameters],
-      });
+      })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 }
