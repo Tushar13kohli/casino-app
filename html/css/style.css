@@ -2646,3 +2646,8 @@ nav.navbar .container {
         transform: translate(-130%, 0);
     }
 }
+
+.login-text{
+    font-size: 16px;
+    color: rgb(52, 230, 52) !important;
+}

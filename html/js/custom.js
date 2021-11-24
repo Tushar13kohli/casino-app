@@ -1,5 +1,7 @@
 const mainnetContract = '0x9bcEB89487789FFA0e4974291066366CDF4411eA'
 const ticketPrice = 0.1
+
+/* WEB 3  STARTS*/
 var Web3
 let isConnected
 const mainnetAbi = [
@@ -104,29 +106,36 @@ const mainnetAbi = [
     type: 'function',
   },
 ]
-const baseUrl = "http://example.com"
-const urls = {
-  profile: `${baseUrl}/me`,
-  login: `${baseUrl}/login`,
-  signup: `${baseUrl}/signup`,
+/* WEB 3  ENDS*/
 
+/* BACKEND STARTS */
+const baseUrl = 'http://localhost:3001'
+const urls = {
+  profile: `${baseUrl}/user/info`,
+  signupUser: `${baseUrl}/user/signup`,
+  loginUser: `${baseUrl}/user/login`,
+  ticket: `${baseUrl}/ticket`,
 }
 
-// Utils
+/* BACKEND ENDS */
+
+/* UTILS STARTS */
 const getElement = (id) => {
   return document.getElementById(id)
+}
+const getElementValue = (id) => {
+  return document.getElementById(id) && document.getElementById(id).value
 }
 const getAuthToken = () => {
   return localStorage.getItem('auth_token')
 }
-
 const writeToLocalStorage = (key, value) => {
   localStorage.setItem(key, value)
 }
-
 const readFromLocalStorage = (key) => {
   return localStorage.getItem(key)
 }
+/* UTILS ENDS */
 
 $(function () {
   'use strict'
@@ -269,55 +278,103 @@ const onClickApp = () => {
   )
 }
 
-const fetchUserInfo = () => {
+const fetchUserInfo = async () => {
   let connectedWallet = readFromLocalStorage('connectedWallet')
-  fetch(`${urls.profile}?walletAddress=${connectedWallet}`)
-    .then((response) => {
-      writeToLocalStorage("doesUserExist", true)
-    })
-    .then((response) => {
-      // Do something with response.
-    })
-    .catch((err) => console.log(err))
+  if (!connectedWallet) return;
+  let response = await fetch(
+    `${urls.profile}?walletAddress=${connectedWallet}`,
+    {
+      headers: {
+        App_ID: '619471ed70d643120b94cc7a',
+      },
+    },
+  )
+
+  if (response && response.status === 404) {
+    writeToLocalStorage('doesUserExist', false)
+  }
+  if (response && response.status === 200) {
+    let res = await response.json()
+    writeToLocalStorage('doesUserExist', true)
+    writeToLocalStorage('connectedWallet', res.walletAddress)
+  }
+  return response
 }
 
-const onClickSubmitForm = () => {
-  let doesUserExist = readFromLocalStorage('doesUserExist')
-  let callingUrl = doesUserExist ? urls.login : urls.signup;
+const onClickSubmitForm = (event) => {
+  event.preventDefault()
+  const passwordValue = getElementValue('passwordField')
+  if (!passwordValue) {
+    alert('All fields are required.')
+    return
+  }
+  let doesUserExist = JSON.parse(readFromLocalStorage('doesUserExist'))
+  let callingUrl = doesUserExist ? urls.loginUser : urls.signupUser
   const wallet = readFromLocalStorage('connectedWallet')
-  const password = getElement('passwordField')
-
+  const password = getElement('passwordField').value
   const payload = {
     walletAddress: wallet,
-    password
+    password,
   }
-  fetch(`${callingUrl}`, payload)
-    .then((response) => {
-      writeToLocalStorage("auth_token", response.token)
+  fetch(`${callingUrl}`, {
+    headers: {
+      App_ID: '619471ed70d643120b94cc7a',
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+    .then(async (response) => {
+      if (response && response.status === 200) {
+        let res = await response.json()
+        writeToLocalStorage('auth_token', res.token)
+        window.location.href="/games.html"
+        window.location.href = "./html/Unminified/index.html"
+        window.location.reload()
+      } else {
+        alert(response.statusText)
+      }
     })
     .catch((err) => {
-      console.log(err);
+      debugger
+      console.log(err)
     })
 }
 
 const getLabel = () => {
+  if (!window.location.pathname.includes("index.html")) return;
   const labelElement = getElement('label-banner')
   const submitButton = getElement('submit-button-form')
   const modalHeader = getElement('modal-label')
+  const loginSuccessElement = getElement('login-text')
   const confirmElement = getElement('confirmPassword')
-  if (getAuthToken()) {
+  const userExists = JSON.parse(readFromLocalStorage('doesUserExist'))
+  const authToken = getAuthToken()
+  const connectedWallet = readFromLocalStorage('connectedWallet')
+  if (userExists ) {
     labelElement.innerHTML = 'Sign In'
     submitButton.innerHTML = 'Sign In'
     modalHeader.innerHTML = 'Sign In'
+    labelElement.style.display='intial'
     confirmElement.style.display = 'none'
   } else {
     labelElement.innerHTML = 'Register'
     submitButton.innerHTML = 'Register'
     modalHeader.innerHTML = 'Register'
   }
+
+  if (authToken) {
+    labelElement.style.display = 'none'
+    loginSuccessElement.innerHTML = 'You are successfully logged in'
+    loginSuccessElement.style.display = 'block'
+  }
+  if (!connectedWallet) {
+    labelElement.style.display = 'none'
+  }
 }
 
 const validatePassword = (event) => {
+  if (!window.location.pathname.includes("index.html")) return;
   const passwordValue = getElement('passwordField')
   const errorMessage = getElement('password-error')
   if (!event) {
@@ -331,23 +388,36 @@ const validatePassword = (event) => {
   errorMessage.style.display = 'none'
   return true
 }
-
-window.onload = async () => {
+const onLoadChanges = async () => {
+  const isConnected = JSON.parse(readFromLocalStorage('isConnected'))
+  const connectedWallet = readFromLocalStorage('connectedWallet')
   let element = document.getElementById('connectWallet')
-  const result = await this.getAccounts()
-  if (Array.isArray(result) && result.length > 0) {
-    element.innerHTML = `Wallet - ...${result[0].substring(
-      result[0].length - 7,
+  const inputWallet = getElement('wallet-address')
+  if (isConnected) {
+    element.innerHTML = `Wallet - ...${connectedWallet.substring(
+      connectedWallet.length - 7,
     )}`
     document.getElementById(
       'connectWallet-mobile',
-    ).innerHTML = `Wallet - ...${result[0].substring(result[0].length - 7)}`
-
-    isConnected = true
+    ).innerHTML = `Wallet - ...${connectedWallet.substring(
+      connectedWallet.length - 7,
+    )}`
+    writeToLocalStorage('connectedWallet', connectedWallet)
+    writeToLocalStorage('isConnected', true)
+    if(inputWallet) inputWallet.value = connectedWallet
   }
+  window.ethereum.on('accountsChanged', (accounts) => {
+    localStorage.clear()
+    window.location.reload()
+  })
+  await fetchUserInfo()
   getLabel()
   validatePassword()
 }
+window.onload = () => {
+  onLoadChanges()
+}
+
 async function getAccounts() {
   try {
     let acc = await window.ethereum.request({
@@ -357,30 +427,6 @@ async function getAccounts() {
     return acc
   } catch (e) {
     return []
-  }
-}
-async function connectMetamask() {
-  if (window.ethereum) {
-    try {
-      const result = await this.getAccounts()
-      if (Array.isArray(result) && result.length > 0) {
-        isConnected = true
-        let acc = result[0]
-        document.getElementById(
-          'connectWallet',
-        ).innerHTML = `Wallet - ...${result[0].substring(result[0].length - 7)}`
-        document.getElementById(
-          'connectWallet-mobile',
-        ).innerHTML = `Wallet - ...${result[0].substring(result[0].length - 7)}`
-        return acc
-      } else {
-        return false
-      }
-    } catch (err) {
-      return false
-    }
-  } else {
-    return false
   }
 }
 async function buyLottery() {
@@ -405,5 +451,132 @@ async function buyLottery() {
     } catch (error) {
       console.log(error)
     }
+  }
+}
+
+/**
+ * WEB 3 Integration
+ */
+
+const Web3Modal = window.Web3Modal.default
+const WalletConnectProvider = window.WalletConnectProvider.default
+const Fortmatic = window.Fortmatic
+const evmChains = window.evmChains
+
+let web3Modal
+let provider
+let selectedAccount
+
+/**
+ * Setup the orchestra
+ */
+function init() {
+  console.log('Initializing example')
+  console.log('WalletConnectProvider is', WalletConnectProvider)
+  console.log('Fortmatic is', Fortmatic)
+  const providerOptions = {
+    walletconnect: {
+      package: WalletConnectProvider,
+      options: {
+        infuraId: '8043bb2cf99347b1bfadfb233c5325c0',
+      },
+    },
+  }
+
+  web3Modal = new Web3Modal({
+    cacheProvider: false,
+    providerOptions,
+    disableInjectedProvider: false,
+  })
+}
+
+const afterConnect = async (account) => {
+  const inputWallet = getElement('wallet-address')
+  inputWallet.value = account
+  writeToLocalStorage('connectedWallet', account)
+  writeToLocalStorage('isConnected', true)
+  let res = await fetchUserInfo()
+  debugger;
+  getLabel()
+}
+
+async function fetchAccountData() {
+  const web3 = new Web3(provider)
+  console.log('Web3 instance is', web3)
+  const accounts = await web3.eth.getAccounts()
+  console.log('Got accounts', accounts)
+  document.querySelector(
+    '#connectWallet',
+  ).textContent = `Wallet - ...${accounts[0].substring(accounts[0].length - 7)}`
+  afterConnect(accounts[0])
+}
+
+async function refreshAccountData() {
+  await fetchAccountData(provider)
+}
+
+async function onConnect() {
+  try {
+    provider = await web3Modal.connect()
+  } catch (e) {
+    console.log('Could not get a wallet connection', e)
+    return
+  }
+
+  provider.on('connect', () => {
+    console.log('Connected')
+  })
+
+  provider.on('accountsChanged', (accounts) => {
+    alert('Reloading due to wallet change')
+    localStorage.clear()
+    window.location.reload()
+  })
+
+  provider.on('chainChanged', (chainId) => {
+    fetchAccountData()
+  })
+
+  provider.on('networkChanged', (networkId) => {
+    fetchAccountData()
+  })
+
+  await refreshAccountData()
+}
+
+window.addEventListener('load', async () => {
+  init()
+  document.querySelector('#connectWallet').addEventListener('click', onConnect)
+})
+
+const getBannerLabel = () => {
+  const labelElement = getElement('label-banner')
+  const submitButton = getElement('submit-button-form')
+  const modalHeader = getElement('modal-label')
+  const loginSuccessElement = getElement('login-text')
+  const confirmElement = getElement('confirmPassword')
+  const userExists = JSON.parse(readFromLocalStorage('doesUserExist'))
+  const authToken = getAuthToken()
+  const connectedWallet = readFromLocalStorage('connectedWallet')
+  if (userExists) {
+    labelElement.innerHTML = 'Sign In'
+    submitButton.innerHTML = 'Sign In'
+    modalHeader.innerHTML = 'Sign In'
+    confirmElement.style.display = 'none'
+  } else {
+    labelElement.innerHTML = 'Register'
+    submitButton.innerHTML = 'Register'
+    modalHeader.innerHTML = 'Register'
+  }
+
+  if (authToken) {
+    labelElement.style.display = 'none'
+    loginSuccessElement.innerHTML = 'You are successfully logged in'
+    loginSuccessElement.style.display = 'block'
+  }
+  if (!connectedWallet) {
+    labelElement.style.display = 'none'
+  } else {
+    labelElement.style.display = 'initial'
   }
 }

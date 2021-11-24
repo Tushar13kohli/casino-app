@@ -2,7 +2,8 @@
 <html lang="en">
 
     <head>
-        <meta charset="utf-8">
+        <meta charset = "UTF-8" />
+
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <title>Lucky Pig Casino</title>
         <meta name="description" content="">
@@ -27,6 +28,14 @@
         <link href="css/modal.css" rel="stylesheet"> <link href="css/responsive.css" rel="stylesheet">
      
         <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+
+
+    <script type="text/javascript" src="https://unpkg.com/web3@1.2.11/dist/web3.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/web3modal@1.9.0/dist/index.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/evm-chains@0.2.0/dist/umd/index.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/@walletconnect/web3-provider@1.2.1/dist/umd/index.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/fortmatic@2.0.6/dist/fortmatic.js"></script>
+    <script type="text/javascript" src="./js/connectWallet.js"></script>
 
     </head>
 
@@ -112,7 +121,7 @@
                         </div>
                         <ul class="login_menu navbar-right nav-sign">
                             <li class="login">
-                                <a id="connectWallet" onclick="connectMetamask();return false;" class="btn-4 yellow-btn">Connect</a>
+                                <a id="connectWallet" class="btn-4 yellow-btn">Connect</a>
                             </li>
                         </ul>
                     </div>
@@ -175,12 +184,12 @@
                         </div>
                         <div class="login-modal">
                             <h1 id="modal-label" class="heading">Login</h1>
-                            <form method="post">
-                                <input type="text" name="wallet" placeholder="Wallet Address" required="required" />
-                                <input id="passwordField" type="password" name="password" placeholder="Password" required="required" />
-                                <input id="confirmPassword" type="password" name="confirmPassword" onkeyup="validatePassword(event)" placeholder="Confirm Password" required="required" />
+                            <form>
+                                <input id="wallet-address" type="text" name="wallet" placeholder="Wallet Address" required />
+                                <input id="passwordField" required type="password" name="password" placeholder="Password" />
+                                <input id="confirmPassword" required type="password" name="confirmPassword" onkeyup="validatePassword(event)" placeholder="Confirm Password" />
                                 <span id="password-error" class="text-danger">Passwords do not match.</span>
-                                <button type="submit" onclick="onClickSubmitForm()" id="submit-button-form" class="modal-btn modal-btn-primary modal-btn-block modal-btn-large mt-3">Sign in</button>
+                                <button type="submit" onclick="onClickSubmitForm(event)" id="submit-button-form" class="modal-btn modal-btn-primary modal-btn-block modal-btn-large mt-3">Sign in</button>
                             </form>
                         </div>
                     </div>
@@ -199,7 +208,7 @@
                             <h1 class="title">Lucky Pig Casino</h1>
                             <h2>A product of Lucky Pig Token</h2>
                             <p>Lucky Pig Casino is fully licensed and regulated. When you play with us you can be sure that we are following a high standard of compliance and that your transactions and details are kept safe and secure.</p>
-
+                            <p style="display: none;"id="login-text" class="login-text"></p>
                             <div class="casino-btn">
                                 <a href="games.html" class="btn-4 yellow-btn">Play Now</a>
                                 <button id="label-banner" class="align-super setting-button navbar-toggler text-white font-weight-bold w-25" type="button" data-toggle="modal" data-target="#myModal2" data-toggle="collapse" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">Sign in</button>
